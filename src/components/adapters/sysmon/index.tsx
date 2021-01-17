@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {SysResponse} from './reponse-types';
 import {CpuStatsUI} from './subcomponents'
+
 interface SysMonUIProps {
     fetch_url: string,
     update_freq: number
@@ -21,25 +22,32 @@ const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
         payload: null
     });
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            fetch(fetch_url)
-                .then(response => response.json())
-                .then(response => {
-                    setResponse({
-                        status: "success",
-                        payload: response,
-                    });
-                })
-                .catch(error => {
-                    setResponse({
-                        status: "error",
-                        payload: null,
-                        error: error.toString()
-                    });
-                    clearInterval(interval);
-                })
+    const fetch_stats = (url: string, currentInterval: NodeJS.Timeout | null) => {
+        fetch(url)
+            .then(response => response.json())
+            .then(response => {
+                setResponse({
+                    status: "success",
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                setResponse({
+                    status: "error",
+                    payload: null,
+                    error: error.toString()
+                });
+                if (currentInterval != null) {
+                    clearTimeout(currentInterval);
+                }
+            })
+    }
 
+
+    useEffect(() => {
+        fetch_stats(fetch_url, null);
+        const interval = setInterval(() => {
+            fetch_stats(fetch_url, interval);
         }, update_freq * 1000);
         return () => clearInterval(interval);
     }, [fetch_url, update_freq]);
