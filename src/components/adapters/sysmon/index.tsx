@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {SysResponse} from './reponse-types';
 import {CpuStatsUI} from './subcomponents'
+import connectSocket from "./socket-connection.";
 
 interface SysMonUIProps {
     fetch_url: string,
@@ -14,8 +15,12 @@ interface RequestState<T> {
 }
 
 const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
-
     const {fetch_url, update_freq} = props;
+
+    useEffect(() => {
+        connectSocket(fetch_url, "/stats");
+    }, []);
+
 
     const [response, setResponse] = React.useState<RequestState<SysResponse>>({
         status: "init",
@@ -42,7 +47,6 @@ const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
                 }
             })
     }
-
 
     useEffect(() => {
         fetch_stats(fetch_url, null);
