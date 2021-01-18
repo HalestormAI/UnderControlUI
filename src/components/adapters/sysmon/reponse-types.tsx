@@ -1,9 +1,5 @@
 import React from 'react';
 
-type SystemInfo = {
-    model: string
-}
-
 type CpuFreqInfo = {
     current: number,
     min: number,
@@ -45,23 +41,26 @@ type DiskInfo = {
     percent: number
 }
 
-interface SysResponse {
-    stats: {
-        system: {
-            model: null | string
-        },
-        cpu: CpuInfo,
-        memory: {
-            virtual: VirtualMemoryInfo,
-            swap: SwapMemoryInfo
-        },
-        disk?: {
-            [diskName: string]: DiskInfo
-        }
+type StatInfo = {
+    system: {
+        model: null | string
+    },
+    cpu: CpuInfo,
+    memory: {
+        virtual: VirtualMemoryInfo,
+        swap: SwapMemoryInfo
+    },
+    disk?: {
+        [diskName: string]: DiskInfo
     }
-};
+}
+
+interface SysResponse {
+    stats: StatInfo
+}
 
 export type {
     SysResponse,
-    CpuInfo
+    CpuInfo,
+    StatInfo
 };
