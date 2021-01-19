@@ -1,5 +1,10 @@
 import React from 'react';
 
+type SystemInfo = {
+    model: string
+    hostname: string
+}
+
 type CpuFreqInfo = {
     current: number,
     min: number,
@@ -42,9 +47,7 @@ type DiskInfo = {
 }
 
 type StatInfo = {
-    system: {
-        model: null | string
-    },
+    system: SystemInfo,
     cpu: CpuInfo,
     memory: {
         virtual: VirtualMemoryInfo,

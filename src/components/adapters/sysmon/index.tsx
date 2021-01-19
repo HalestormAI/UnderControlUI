@@ -21,7 +21,7 @@ const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
         <React.Fragment>
             <h2>Fetching from {fetch_url}.</h2>
             {stats && (
-                <div><h3>{stats.system.model}</h3>
+                <div><h3>{stats.system.hostname} [{stats.system.model}]</h3>
                     <CpuStatsUI
                         perc={stats.cpu.perc}
                         freq={stats.cpu.freq}
