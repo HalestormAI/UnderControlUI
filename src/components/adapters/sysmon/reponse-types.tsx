@@ -64,6 +64,8 @@ interface SysResponse {
 
 export type {
     SysResponse,
+    StatInfo,
     CpuInfo,
-    StatInfo
+    DiskInfo,
+    VirtualMemoryInfo
 };

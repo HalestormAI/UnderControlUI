@@ -26,7 +26,7 @@ export default function MonitorPage(props: MonitorPageProps) {
         <Grid container spacing={3}>
             {props.urls.map((url: string) => (
 
-                <Grid item xs={4} key={`monitorPage_${url}`}>
+                <Grid item xs={12} md={6} lg={4} key={`monitorPage_${url}`}>
                     <Paper className={classes.paper}>
                         <SysMonUI fetch_url={url}/>
                     </Paper>
