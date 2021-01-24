@@ -4,8 +4,8 @@ import {Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 
-interface MonitorPageProps {
-    urls: string[]
+export interface MonitorPageProps {
+    urls?: string[]
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,7 @@ export default function MonitorPage(props: MonitorPageProps) {
 
     return (
         <Grid container spacing={3}>
-            {props.urls.map((url: string) => (
+            {props.urls && props.urls.map((url: string) => (
 
                 <Grid item xs={12} md={6} lg={4} key={`monitorPage_${url}`}>
                     <Paper className={classes.paper}>

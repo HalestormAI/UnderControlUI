@@ -6,20 +6,20 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import BarChartIcon from "@material-ui/icons/BarChart";
 import ListItemText from "@material-ui/core/ListItemText";
-import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
-import TvIcon from "@material-ui/icons/Tv";
 import Drawer from "@material-ui/core/Drawer";
 import React, {MouseEventHandler} from "react";
 import {useTheme} from "@material-ui/core/styles";
 import {useStyles} from "../monitorStyles";
+import {Routes} from "../../../routes";
+import {Link} from "react-router-dom";
 
 
 interface SideBarProps {
     onDrawerClose: MouseEventHandler,
     drawerWidth: number,
-    open: boolean
+    open: boolean,
+    routes: Routes
 }
 
 const SideBar: React.FunctionComponent<SideBarProps> = props => {
@@ -46,18 +46,14 @@ const SideBar: React.FunctionComponent<SideBarProps> = props => {
         </div>
         <Divider/>
         <List>
-            <ListItem button>
-                <ListItemIcon><BarChartIcon/></ListItemIcon>
-                <ListItemText primary={"System Stats"}/>
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon><SettingsRemoteIcon/></ListItemIcon>
-                <ListItemText primary={"Kasa Devices"}/>
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon><TvIcon/></ListItemIcon>
-                <ListItemText primary={"TV Remote"}/>
-            </ListItem>
+            {props.routes && props.routes.map(route => {
+                const IconComponent = route.icon;
+                return (
+                    <ListItem button component={Link} to={route.url} key={`sidebar_link_${route.url}`}>
+                        <ListItemIcon><IconComponent/></ListItemIcon>
+                        <ListItemText primary={route.name}/>
+                    </ListItem>)
+            })}
         </List>
         <Divider/>
     </Drawer>
