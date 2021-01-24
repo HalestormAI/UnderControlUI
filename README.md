@@ -1,4 +1,49 @@
-# Getting Started with Create React App
+# Under Control UI
+
+A React frontend for the "Under Control" server and system monitor components.
+
+To run the NPM server, use `yarn start`.
+
+## Connecting to the Under Control Server
+
+TODO...
+
+## Connecting to the System Monitor apps
+
+![System Monitor Dashboard](readme/undercontrol-screenshot-system-stats.png)
+
+This service connects to the Under Control SysMon apps using [Socket.IO](https://socket.io/) sockets. Since the
+hosts/ports will differ, we will hit issues with CORS if the sysmon apps don't allow the cross-origin requests.
+
+Each SysMon app should be configured with the NPM UI server's host/port whitelisted in the `cors_origins` list
+(either in the config file or by argument if running directly).
+
+E.g.: The following will allow devices to connect if the NPM server is accessed through localhost, localhost IP or the
+host machine IP that the server is running on.
+
+```toml
+cors_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.1.123:3000"
+]
+```
+
+Frustratingly, although FastAPI (the REST frontend for the SysMon apps)
+[does support regex patterns for CORS](https://www.starlette.io/middleware/), the Python bindings for SocketIO
+[python-socketio](https://python-socketio.readthedocs.io/en/latest/) does not, so we have to configure this manually.
+
+## TODO:
+
+* [ ] Config file [e.g. app urls]
+* [ ] Auto-detection of sysmon endpoints
+* [ ] Dockerfile
+* [ ] TV Remote functions
+* [ ] Kasa adaptor frontend
+
+# The standard blurb...
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
