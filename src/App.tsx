@@ -7,13 +7,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MonitorPage from "./components/pages/monitor";
-import SideBar from "./components/pages/common/sidebar";
-import {useStyles} from "./components/pages/monitorStyles";
+import MonitorPage from './components/pages/monitor';
+import SideBar from './components/pages/common/sidebar';
+import {useStyles} from './components/pages/monitorStyles';
 
 const drawerWidth = 240;
-
-
 const urls = [
     "http://192.168.1.126:7653",
     "http://192.168.1.202:7653"
@@ -54,7 +52,7 @@ function App() {
                             <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" noWrap>
-                            Mini variant drawer
+                            Under Control
                         </Typography>
                     </Toolbar>
                 </AppBar>
