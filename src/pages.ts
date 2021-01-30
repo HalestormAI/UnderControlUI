@@ -23,19 +23,20 @@ const pages: Array<PageDef<any>> = [
     {
         url: "/lgtv-remote",
         name: "TV Remote",
-        icon: SettingsRemoteIcon,
+        icon: TvIcon,
         component: LGTVRemotePage,
         props: {
-            text: "This is some demo text."
+            serverHost: 'http://127.0.0.1:7654/lgtv'
         }
     },
     {
         url: "/kasa-controller",
         name: "Kasa Devices",
-        icon: TvIcon,
+        icon: SettingsRemoteIcon,
         component: KasaControllerPage,
         props: {
-            kasaText: "This is some demo text."
+            serverHost: 'http://127.0.0.1:7654/kasa',
+            updateFreq: 60
         }
     }
 ];
