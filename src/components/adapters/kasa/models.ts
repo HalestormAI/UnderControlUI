@@ -8,16 +8,18 @@ export type TimeStat = {
 export type TimeStatList = Array<TimeStat>;
 
 export type KasaBulbLightStateData = {
-    index: number;
     hue: number;
     saturation: number;
     color_temp: number;
     brightness: number;
 }
 
-export type KasaBulbLightState = {
+export type KasaBulbPreferredState = KasaBulbLightStateData & {
+    index: number;
+}
+
+export type KasaBulbLightState = KasaBulbLightStateData & {
     on_off: boolean;
-    dft_on_state: KasaBulbLightStateData;
 }
 
 
@@ -35,7 +37,7 @@ export type KasaBulbSysInfo = GeneralSysInfo & {
     is_dimmable: boolean;
     is_color: boolean;
     is_variable_color_temp: boolean;
-    preferred_state: Array<KasaBulbLightStateData>
+    preferred_state: Array<KasaBulbPreferredState>
     light_state: KasaBulbLightState
 }
 
@@ -98,6 +100,26 @@ export const isOn = (device: KasaDevice) => {
         return (device._sys_info as KasaBulbSysInfo).light_state.on_off;
     }
     throw Error("Could not determine device type for power state detection.");
+}
+
+export type HSL = { h: number, s: number, l: number };
+
+export const currentColour = (device: KasaDevice): HSL => {
+    const bulbInfo = device._sys_info as KasaBulbSysInfo;
+
+    if (bulbInfo.light_state === undefined) {
+        throw Error(`Attempted to get colour from a device [${device._sys_info.alias}] that does not appear to be a bulb.`);
+    }
+
+    const hue = bulbInfo.light_state.hue;
+    const saturation = bulbInfo.light_state.saturation;
+    const value = bulbInfo.light_state.brightness;
+
+    return {h: hue, s: saturation / 100., l: value / 100.}
+}
+export const hslToColourSpec = (hsl: HSL): string => {
+    const colour = [hsl.h, hsl.s * 100, hsl.l * 100].map(Math.round);
+    return colour.join(",");
 }
 
 export type KasaDeviceMap = {

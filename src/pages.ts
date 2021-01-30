@@ -26,7 +26,7 @@ const pages: Array<PageDef<any>> = [
         icon: TvIcon,
         component: LGTVRemotePage,
         props: {
-            serverHost: 'http://127.0.0.1:7654/lgtv'
+            serverHost: 'http://192.168.1.227:7654/lgtv'
         }
     },
     {
@@ -35,7 +35,7 @@ const pages: Array<PageDef<any>> = [
         icon: SettingsRemoteIcon,
         component: KasaControllerPage,
         props: {
-            serverHost: 'http://127.0.0.1:7654/kasa',
+            serverHost: 'http://192.168.1.227:7654/kasa',
             updateFreq: 60
         }
     }

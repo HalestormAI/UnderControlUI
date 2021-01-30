@@ -1,4 +1,4 @@
-import {isOn, KasaDevice, KasaDeviceMap} from "./models";
+import {HSL, hslToColourSpec, isOn, KasaDevice, KasaDeviceMap} from "./models";
 
 export const fetchAllDevices = (url: string, currentInterval: NodeJS.Timeout | null, setDevices: CallableFunction, setError: CallableFunction) => {
     setError(null);
@@ -50,7 +50,7 @@ export const updateDevice = (url: string, deviceName: string, devices: KasaDevic
 export const toggleDeviceOnOff = (url: string, deviceName: string, device: KasaDevice, setError: CallableFunction | null) => {
     const onOrOff = isOn(device) ? "off" : "on";
     const deviceUri = `${url}/${deviceName}/${onOrOff}`;
-    return fetch(deviceUri)
+    return fetch(deviceUri, {method: "PUT"})
         .then(response => {
             if (!response.ok) {
                 throw Error(`Could not toggle device on/off. [${response.status} ${response.statusText}]`)
@@ -59,6 +59,24 @@ export const toggleDeviceOnOff = (url: string, deviceName: string, device: KasaD
         })
         .then((response: { message: string }) => {
             console.debug("Toggled device on/off: ", response.message);
+        })
+        .catch(error => {
+            setError && setError(error.toString());
+        });
+}
+
+export const setDeviceColour = (colour: HSL, url: string, deviceName: string, device: KasaDevice, setError: CallableFunction | null) => {
+    const colourSpec = hslToColourSpec(colour);
+    const deviceUri = `${url}/${deviceName}/colour/${colourSpec}`;
+    return fetch(deviceUri, {method: "PUT"})
+        .then(response => {
+            if (!response.ok) {
+                throw Error(`Could not set device colour to ${colourSpec}. [${response.status} ${response.statusText}]`)
+            }
+            return response.json();
+        })
+        .then((response: { message: string }) => {
+            console.debug("Changed device colour: ", response.message);
         })
         .catch(error => {
             setError && setError(error.toString());

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {KasaDeviceMap} from "./models";
+import {HSL, KasaDeviceMap} from "./models";
 import {Alert, AlertTitle} from '@material-ui/lab';
 import {Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import KasaDeviceUi from "./device";
-import {fetchAllDevices, toggleDeviceOnOff, updateDevice} from "./actions";
+import {fetchAllDevices, setDeviceColour, toggleDeviceOnOff, updateDevice} from "./actions";
 
 export interface KasaControllerProps {
     serverHost: string,
@@ -46,6 +46,14 @@ export default function KasaUi(props: KasaControllerProps) {
         updateDevice(props.serverHost, deviceName, devices, setDevices, setError)
     }
 
+    const setColour = async (deviceName: string, colour: HSL) => {
+        if (!devices || !devices[deviceName]) {
+            throw Error("Could not find device named: " + deviceName);
+        }
+        await setDeviceColour(colour, props.serverHost, deviceName, devices[deviceName], setError)
+        updateDevice(props.serverHost, deviceName, devices, setDevices, setError)
+    }
+
     return <React.Fragment>
         <p>TP-Link Kasa Controller</p>
 
@@ -62,7 +70,8 @@ export default function KasaUi(props: KasaControllerProps) {
                 .map(([name, data]) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={`device_${name}`}>
                         <Paper className={classes.paper}>
-                            <KasaDeviceUi name={name} device={data} toggleOnOff={toggleOnOff}/>
+                            <KasaDeviceUi name={name} device={data} toggleOnOff={toggleOnOff}
+                                          setDeviceColour={setColour}/>
                         </Paper>
                     </Grid>
                 ))}
