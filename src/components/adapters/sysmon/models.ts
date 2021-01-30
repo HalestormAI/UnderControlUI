@@ -1,30 +1,28 @@
-import React from 'react';
-
-type SystemInfo = {
+export type SystemInfo = {
     model: string
     hostname: string
 }
 
-type CpuFreqInfo = {
+export type CpuFreqInfo = {
     current: number,
     min: number,
     max: number
 }
 
-type CpuInfo = {
+export type CpuInfo = {
     freq: [CpuFreqInfo],
     perc: number[],
     temp: number
 }
 
-type BaseMemoryInfo = {
+export type BaseMemoryInfo = {
     total: number,
     used: number,
     free: number,
     percent: number
 }
 
-type VirtualMemoryInfo = BaseMemoryInfo & {
+export type VirtualMemoryInfo = BaseMemoryInfo & {
     available: number,
     active: number,
     inactive: number,
@@ -34,19 +32,19 @@ type VirtualMemoryInfo = BaseMemoryInfo & {
     slab: number
 }
 
-type SwapMemoryInfo = BaseMemoryInfo & {
+export type SwapMemoryInfo = BaseMemoryInfo & {
     sin: number,
     sout: number
 }
 
-type DiskInfo = {
+export type DiskInfo = {
     total: number,
     used: number,
     free: number,
     percent: number
 }
 
-type StatInfo = {
+export type StatInfo = {
     system: SystemInfo,
     cpu: CpuInfo,
     memory: {
@@ -58,14 +56,6 @@ type StatInfo = {
     }
 }
 
-interface SysResponse {
+export interface SysResponse {
     stats: StatInfo
 }
-
-export type {
-    SysResponse,
-    StatInfo,
-    CpuInfo,
-    DiskInfo,
-    VirtualMemoryInfo
-};

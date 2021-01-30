@@ -2,7 +2,7 @@ import React from "react";
 import {buildStyles, CircularProgressbar, CircularProgressbarWithChildren} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-import {CpuInfo, DiskInfo, VirtualMemoryInfo,} from "./reponse-types";
+import {CpuInfo, DiskInfo, VirtualMemoryInfo,} from "./models";
 
 interface BasicColourSpec {
     pathColor?: string;

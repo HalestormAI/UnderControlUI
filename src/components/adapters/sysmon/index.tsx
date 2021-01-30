@@ -1,8 +1,10 @@
 import React, {useEffect} from 'react';
-import {StatInfo} from './reponse-types';
+import {StatInfo} from './models';
 import {BasicColourSpec, CpuStatsUI, DiskStatsUI, MemStatsUI} from './subcomponents'
 import {connectSocket, disconnectSocket} from "./socket-connection";
 import {Socket} from "socket.io-client/build/socket";
+import {Grid, Paper} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
 interface SysMonUIProps {
     fetch_url: string,
@@ -79,4 +81,36 @@ const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
     )
 }
 
-export default SysMonUI;
+
+export interface MonitorPageProps {
+    urls?: string[]
+}
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+}));
+
+export default function MonitorPage(props: MonitorPageProps) {
+    const classes = useStyles();
+
+    return (
+        <Grid container spacing={3}>
+            {props.urls && props.urls.map((url: string) => (
+
+                <Grid item xs={12} md={6} lg={4} key={`monitorPage_${url}`}>
+                    <Paper className={classes.paper}>
+                        <SysMonUI fetch_url={url}/>
+                    </Paper>
+                </Grid>
+
+            ))}
+        </Grid>)
+
+}

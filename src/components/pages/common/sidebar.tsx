@@ -10,8 +10,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Drawer from "@material-ui/core/Drawer";
 import React, {MouseEventHandler} from "react";
 import {useTheme} from "@material-ui/core/styles";
-import {useStyles} from "../monitorStyles";
-import {Routes} from "../../../routes";
+import {useStyles} from "./sidebar-styles";
+import {PageList} from "../../../menu-registry";
 import {Link} from "react-router-dom";
 
 
@@ -19,7 +19,7 @@ interface SideBarProps {
     onDrawerClose: MouseEventHandler,
     drawerWidth: number,
     open: boolean,
-    routes: Routes
+    pages: PageList
 }
 
 const SideBar: React.FunctionComponent<SideBarProps> = props => {
@@ -46,7 +46,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = props => {
         </div>
         <Divider/>
         <List>
-            {props.routes && props.routes.map(route => {
+            {props.pages && props.pages.map(route => {
                 const IconComponent = route.icon;
                 return (
                     <ListItem button component={Link} to={route.url} key={`sidebar_link_${route.url}`}>

@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SideBar from './components/pages/common/sidebar';
-import {useStyles} from './components/pages/monitorStyles';
+import {useStyles} from './components/pages/common/sidebar-styles';
 import {BrowserRouter as Router, Route,} from "react-router-dom";
-import routes from './routes';
+import pages from './pages'
 
 const drawerWidth = 240;
 
@@ -55,10 +55,10 @@ function App() {
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    <SideBar onDrawerClose={handleDrawerClose} drawerWidth={drawerWidth} open={open} routes={routes}/>
+                    <SideBar onDrawerClose={handleDrawerClose} drawerWidth={drawerWidth} open={open} pages={pages}/>
                     <main className={classes.content}>
                         <div className={classes.toolbar}/>
-                        {routes.map(route => {
+                        {pages.map((route) => {
                             const PageComponent = route.component;
                             return <Route exact path={route.url} key={`route_${route.url}`}>
                                 <PageComponent {...route.props} />
