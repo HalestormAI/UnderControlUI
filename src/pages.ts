@@ -2,7 +2,7 @@ import MenuRegistry, {PageDef} from "./menu-registry";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import MonitorPage from "./components/adapters/sysmon";
 import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
-import LGTVRemotePage from "./components/pages/lgtv-remote";
+import LGTVRemotePage from "./components/adapters/lgtv-remote";
 import KasaControllerPage from "./components/adapters/kasa";
 import TvIcon from "@material-ui/icons/Tv";
 
