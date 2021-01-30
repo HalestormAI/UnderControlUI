@@ -7,7 +7,7 @@ import {Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 interface SysMonUIProps {
-    fetch_url: string,
+    serverHost: string,
 }
 
 const circleWidth = 150;
@@ -27,13 +27,13 @@ const diskColour: BasicColourSpec = {
 }
 
 const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
-    const {fetch_url} = props;
+    const {serverHost} = props;
     const [stats, setStats] = React.useState<StatInfo | null>(null);
     const [socket, setSocket] = React.useState<Socket | null>(null);
 
     useEffect(() => {
         if (socket === null) {
-            const s = connectSocket(fetch_url, "/stats", (stat_data: StatInfo) => {
+            const s = connectSocket(serverHost, "/stats", (stat_data: StatInfo) => {
                 setStats(stat_data);
             });
             setSocket(s);
@@ -44,7 +44,7 @@ const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
                 setSocket(null);
             }
         };
-    }, [socket, fetch_url]);
+    }, [socket, serverHost]);
 
     return (
         <React.Fragment>
@@ -106,7 +106,7 @@ export default function MonitorPage(props: MonitorPageProps) {
 
                 <Grid item xs={12} md={6} lg={4} key={`monitorPage_${url}`}>
                     <Paper className={classes.paper}>
-                        <SysMonUI fetch_url={url}/>
+                        <SysMonUI serverHost={url}/>
                     </Paper>
                 </Grid>
 
