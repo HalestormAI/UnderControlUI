@@ -72,7 +72,7 @@ const MemStatsUI: React.FunctionComponent<VirtualMemoryInfo & CirclePlotProps> =
             text={`${props.percent}%`}
             styles={styleBuilder(props.colours)}
             strokeWidth={7}/>
-        <p>{bytesDisplay(props.free, ByteUnit.MB)}MB of {bytesDisplay(props.total, ByteUnit.MB)}MB free</p>
+        <p>{bytesDisplay(props.available, ByteUnit.GB, 3)}GB of {bytesDisplay(props.total, ByteUnit.GB, 3)}GB free</p>
     </div>
 }
 
