@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {StatInfo} from './reponse-types';
 import {BasicColourSpec, CpuStatsUI, DiskStatsUI, MemStatsUI} from './subcomponents'
-import connectSocket from "./socket-connection.";
-import {Grid} from "@material-ui/core";
+import {connectSocket, disconnectSocket} from "./socket-connection";
+import {Socket} from "socket.io-client/build/socket";
 
 interface SysMonUIProps {
     fetch_url: string,
@@ -27,12 +27,22 @@ const diskColour: BasicColourSpec = {
 const SysMonUI: React.FunctionComponent<SysMonUIProps> = props => {
     const {fetch_url} = props;
     const [stats, setStats] = React.useState<StatInfo | null>(null);
+    const [socket, setSocket] = React.useState<Socket | null>(null);
 
     useEffect(() => {
-        connectSocket(fetch_url, "/stats", (stat_data: StatInfo) => {
-            setStats(stat_data);
-        });
-    }, [fetch_url]);
+        if (socket === null) {
+            const s = connectSocket(fetch_url, "/stats", (stat_data: StatInfo) => {
+                setStats(stat_data);
+            });
+            setSocket(s);
+        }
+        return () => {
+            if (socket) {
+                disconnectSocket(socket);
+                setSocket(null);
+            }
+        };
+    }, [socket, fetch_url]);
 
     return (
         <React.Fragment>
