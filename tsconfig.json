@@ -22,5 +22,8 @@
   },
   "include": [
     "src"
+  ],
+  "files": [
+    "./src/components/adapters/kasa/picker/picker.d.ts"
   ]
 }

@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import {currentColour, isBulb, isOn, KasaBulbSysInfo, KasaDevice} from "./models";
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import {IconButton} from "@material-ui/core";
-import ColorPicker, {Color, ColorObject} from "react-pick-color";
+import {Color, ColorResult, HSLColor} from "react-color";
+import HueSatPicker from "./picker/picker";
 
-type SetDeviceColourCallback = (deviceName: string, colour: ColorObject) => void;
+type SetDeviceColourCallback = (deviceName: string, colour: Color) => void;
 
 type DeviceUiProps = {
     name: string;
@@ -14,18 +15,24 @@ type DeviceUiProps = {
 }
 
 function KasaBulbController(props: DeviceUiProps) {
-    const [colour, setColour] = useState<Color>(currentColour(props.device))
+    const [colour, setColour] = useState<HSLColor>(currentColour(props.device));
     const bulbInfo = props.device._sys_info as KasaBulbSysInfo;
 
     useEffect(() => {
         setColour(currentColour(props.device));
-    }, [bulbInfo.light_state])
+    }, [props.device, bulbInfo.light_state])
 
     return <div>
-        <ColorPicker color={colour} hideAlpha hideInputs onChange={(c) => {
-            setColour(c.hsv);
-            props.setDeviceColour(props.name, c);
-        }}/>
+        <HueSatPicker
+            color={colour}
+            onChange={(c: ColorResult) => {
+                setColour(c.hsl);
+            }}
+            onChangeComplete={(c: ColorResult) => {
+                setColour(c.hsl);
+                props.setDeviceColour(props.name, c.hsl);
+            }}/>
+
     </div>
 }
 

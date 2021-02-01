@@ -1,4 +1,4 @@
-import {HsvColor} from "react-pick-color/build/types";
+import {HSLColor} from "react-color";
 
 export type TimeStat = {
     year: number;
@@ -104,7 +104,7 @@ export const isOn = (device: KasaDevice) => {
     throw Error("Could not determine device type for power state detection.");
 }
 
-export const currentColour = (device: KasaDevice): HsvColor => {
+export const currentColour = (device: KasaDevice): HSLColor => {
     const bulbInfo = device._sys_info as KasaBulbSysInfo;
 
     if (bulbInfo.light_state === undefined) {
@@ -115,10 +115,10 @@ export const currentColour = (device: KasaDevice): HsvColor => {
     const saturation = bulbInfo.light_state.saturation;
     const value = bulbInfo.light_state.brightness;
 
-    return {h: hue, s: saturation / 100., v: value / 100., a: 1}
+    return {h: hue, s: saturation / 100., l: value / 100.}
 }
-export const hsvToColourSpec = (hsl: HsvColor): string => {
-    const colour = [hsl.h, hsl.s * 100, hsl.v * 100].map(Math.round);
+export const hsvToColourSpec = (hsl: HSLColor): string => {
+    const colour = [hsl.h, hsl.s * 100, hsl.l * 100].map(Math.round);
     return colour.join(",");
 }
 
