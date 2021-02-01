@@ -1,4 +1,5 @@
-import {HSL, hslToColourSpec, isOn, KasaDevice, KasaDeviceMap} from "./models";
+import {hsvToColourSpec, isOn, KasaDevice, KasaDeviceMap} from "./models";
+import {HsvColor} from "react-pick-color/build/types";
 
 export const fetchAllDevices = (url: string, currentInterval: NodeJS.Timeout | null, setDevices: CallableFunction, setError: CallableFunction) => {
     setError(null);
@@ -65,8 +66,8 @@ export const toggleDeviceOnOff = (url: string, deviceName: string, device: KasaD
         });
 }
 
-export const setDeviceColour = (colour: HSL, url: string, deviceName: string, device: KasaDevice, setError: CallableFunction | null) => {
-    const colourSpec = hslToColourSpec(colour);
+export const setDeviceColour = (colour: HsvColor, url: string, deviceName: string, device: KasaDevice, setError: CallableFunction | null) => {
+    const colourSpec = hsvToColourSpec(colour);
     const deviceUri = `${url}/${deviceName}/colour/${colourSpec}`;
     return fetch(deviceUri, {method: "PUT"})
         .then(response => {

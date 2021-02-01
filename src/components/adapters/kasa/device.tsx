@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {currentColour, HSL, isBulb, isOn, KasaBulbSysInfo, KasaDevice} from "./models";
+import {currentColour, isBulb, isOn, KasaBulbSysInfo, KasaDevice} from "./models";
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import {IconButton} from "@material-ui/core";
-import {ChromePicker} from 'react-color';
+import ColorPicker, {Color, ColorObject} from "react-pick-color";
+
+type SetDeviceColourCallback = (deviceName: string, colour: ColorObject) => void;
 
 type DeviceUiProps = {
     name: string;
     device: KasaDevice;
     toggleOnOff: CallableFunction;
-    setDeviceColour: CallableFunction;
+    setDeviceColour: SetDeviceColourCallback;
 }
 
 function KasaBulbController(props: DeviceUiProps) {
-    const [colour, setColour] = useState<HSL>(currentColour(props.device))
+    const [colour, setColour] = useState<Color>(currentColour(props.device))
     const bulbInfo = props.device._sys_info as KasaBulbSysInfo;
 
     useEffect(() => {
@@ -20,12 +22,10 @@ function KasaBulbController(props: DeviceUiProps) {
     }, [bulbInfo.light_state])
 
     return <div>
-        <ChromePicker color={colour} disableAlpha
-                      onChange={(c) => setColour(c.hsl)}
-                      onChangeComplete={(c) => {
-                          setColour(c.hsl);
-                          props.setDeviceColour(props.name, c.hsl);
-                      }}/>
+        <ColorPicker color={colour} hideAlpha hideInputs onChange={(c) => {
+            setColour(c.hsv);
+            props.setDeviceColour(props.name, c);
+        }}/>
     </div>
 }
 

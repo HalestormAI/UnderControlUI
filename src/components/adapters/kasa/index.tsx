@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {HSL, KasaDeviceMap} from "./models";
+import {KasaDeviceMap} from "./models";
 import {Alert, AlertTitle} from '@material-ui/lab';
 import {Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import KasaDeviceUi from "./device";
 import {fetchAllDevices, setDeviceColour, toggleDeviceOnOff, updateDevice} from "./actions";
+import {ColorObject} from "react-pick-color";
 
 export interface KasaControllerProps {
     serverHost: string,
@@ -46,11 +47,11 @@ export default function KasaUi(props: KasaControllerProps) {
         updateDevice(props.serverHost, deviceName, devices, setDevices, setError)
     }
 
-    const setColour = async (deviceName: string, colour: HSL) => {
+    const setColour = async (deviceName: string, colour: ColorObject) => {
         if (!devices || !devices[deviceName]) {
             throw Error("Could not find device named: " + deviceName);
         }
-        await setDeviceColour(colour, props.serverHost, deviceName, devices[deviceName], setError)
+        await setDeviceColour(colour.hsv, props.serverHost, deviceName, devices[deviceName], setError)
         updateDevice(props.serverHost, deviceName, devices, setDevices, setError)
     }
 
