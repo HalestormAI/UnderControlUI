@@ -1,4 +1,5 @@
-import {HSLColor} from "react-color";
+import {Color, HSLColor} from "react-color";
+import {hsvToHsl, kasaColourToHSV} from "./colour-convert";
 
 export type TimeStat = {
     year: number;
@@ -111,17 +112,19 @@ export const currentColour = (device: KasaDevice): HSLColor => {
         throw Error(`Attempted to get colour from a device [${device._sys_info.alias}] that does not appear to be a bulb.`);
     }
 
-    const hue = bulbInfo.light_state.hue;
-    const saturation = bulbInfo.light_state.saturation;
-    const value = bulbInfo.light_state.brightness;
-
-    return {h: hue, s: saturation / 100., l: value / 100.}
-}
-export const hsvToColourSpec = (hsl: HSLColor): string => {
-    const colour = [hsl.h, hsl.s * 100, hsl.l * 100].map(Math.round);
-    return colour.join(",");
+    return hsvToHsl(kasaColourToHSV(bulbInfo.light_state));
 }
 
 export type KasaDeviceMap = {
     [deviceName: string]: KasaDevice
 }
+
+type SetDeviceColourCallback = (deviceName: string, colour: Color) => void;
+export type DeviceUiProps = {
+    name: string;
+    device: KasaDevice;
+    toggleOnOff: CallableFunction;
+    setDeviceColour: SetDeviceColourCallback;
+}
+
+export type ActiveSettingName = string | null;
