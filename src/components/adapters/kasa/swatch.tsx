@@ -34,7 +34,8 @@ const useStyles = makeStyles<Theme, PickerSwatchProps>(() => ({
 
 export default function Swatch(props: PickerSwatchProps) {
     const classes = useStyles(props);
-    return <Button variant="outlined" onClick={() => props.onClick(props.buttonName)} color="primary">
+    return <Button variant={props.isActive ? "contained" : "outlined"} onClick={() => props.onClick(props.buttonName)}
+                   color="primary">
         <div className={classes.colour}/>
         {props.text}
     </Button>
