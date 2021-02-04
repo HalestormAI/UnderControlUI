@@ -1,0 +1,12 @@
+{
+  "adapters": {
+    "crypto": {
+      "conversionCurrency": "gbp",
+      "baseConversionCoin": "btc",
+      "coins": [
+        "eth",
+        "ltc"
+      ]
+    }
+  }
+}

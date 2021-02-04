@@ -5,6 +5,8 @@ import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import LGTVRemotePage from "./components/adapters/lgtv-remote";
 import KasaControllerPage from "./components/adapters/kasa";
 import TvIcon from "@material-ui/icons/Tv";
+import CryptoPage from "./components/adapters/crypto";
+import {TrendingUp} from "@material-ui/icons";
 
 
 const pages: Array<PageDef<any>> = [
@@ -38,6 +40,13 @@ const pages: Array<PageDef<any>> = [
             serverHost: 'http://192.168.1.227:7654/kasa',
             updateFreq: 60
         }
+    },
+    {
+        url: "/crypto",
+        name: "Crypto Values",
+        icon: TrendingUp,
+        component: CryptoPage,
+        props: {}
     }
 ];
 
