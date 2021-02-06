@@ -6,7 +6,8 @@
       "coins": [
         "eth",
         "ltc"
-      ]
+      ],
+      "updateFrequency": 1000
     }
   }
 }

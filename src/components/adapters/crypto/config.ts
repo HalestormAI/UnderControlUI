@@ -12,14 +12,27 @@ export const balances: BalanceMap = {
     "doge": 1736
 }
 
-type Config = {
-    conversionCurrency: ConversionCurrency;
-    baseConversionCoin: CoinSymbol;
-    coins: Array<CoinSymbol>
+type ConfigWithDefaults = {
+    updateFrequency: number;
+    historyLength: number;
 }
 
+export type Config = ConfigWithDefaults & {
+    conversionCurrency: ConversionCurrency;
+    baseConversionCoin: CoinSymbol;
+    coins: Array<CoinSymbol>;
+}
+
+const defaults: ConfigWithDefaults = {
+    updateFrequency: 1000,
+    historyLength: 100
+};
+
 function loadConfig(): Config {
-    const cfg = configData.adapters.crypto;
+    const cfg = {
+        ...defaults,
+        ...configData.adapters.crypto
+    };
     cfg.baseConversionCoin = cfg.baseConversionCoin.toLowerCase();
     cfg.conversionCurrency = cfg.conversionCurrency.toLowerCase();
     cfg.coins = cfg.coins.map(c => c.toLowerCase());

@@ -1,34 +1,28 @@
 import React, {useEffect, useState} from 'react'
-import {Rate, ConversionCurrency, SymbolPair, RateMap, CoinSymbol} from "./models";
+import {ConversionCurrency, Rate, RateMap, SymbolPair} from "./models";
 import {setupTickerStream} from "./actions";
 import {balances, config} from "./config";
-
+import {conversionCurrencyPair, hasCurrencyComparator} from "./utils";
 
 export interface CryptoProps {
 }
 
 const tickerBuffer: RateMap = {};
 
-
-
 export default function CryptoPage(props: CryptoProps) {
-    const [rates, setRates] = useState<RateMap>({});
+    const [currentRates, setCurrentRates] = useState<RateMap>({});
+
     const onTickerUpdate = (rate: Rate) => {
         tickerBuffer[rate.symbol.toLowerCase()] = rate.price;
     }
 
-    const hasCurrencyComparator = (symbols: SymbolPair, currency: ConversionCurrency): boolean => {
-        const currencyNameLength = currency.length;
-        return symbols.substring(symbols.length - currencyNameLength).toLowerCase() === currency;
-    }
-
     const toCurrency = (symbols: SymbolPair, currency: ConversionCurrency): number => {
         if (hasCurrencyComparator(symbols, currency)) {
-            return rates[symbols];
+            return currentRates[symbols];
         }
 
-        const baseRate = rates[`${config.baseConversionCoin}${currency}` as SymbolPair];
-        return baseRate * rates[symbols];
+        const baseRate = currentRates[conversionCurrencyPair(config) as SymbolPair];
+        return baseRate * currentRates[symbols];
     }
 
     const getBalance = (symbPair: SymbolPair): number => {
@@ -42,27 +36,28 @@ export default function CryptoPage(props: CryptoProps) {
         const ws = setupTickerStream(config.coins, config.conversionCurrency, onTickerUpdate);
 
         const interval = setInterval(() => {
-            setRates({...tickerBuffer});
-            console.log("Updating buffer", tickerBuffer)
-        }, 2000);
+            if (Object.keys(tickerBuffer).length === 0) {
+                return;
+            }
+            const rates = {...tickerBuffer};
+            setCurrentRates(rates);
+        }, config.updateFrequency);
         return () => {
             clearInterval(interval);
             ws.close();
         }
     }, [config.conversionCurrency])
 
-    const haveRates = !(Object.keys(rates).length === 0 && rates.constructor === Object)
-    const haveConverter = haveRates && rates[`${config.baseConversionCoin}${config.conversionCurrency}`] !== undefined;
-    console.log(haveRates,rates)
-
+    const haveRates = !(Object.keys(currentRates).length === 0 && currentRates.constructor === Object)
+    const haveConverter = haveRates && currentRates[conversionCurrencyPair(config)] !== undefined;
     return <div>
         <ul>
-            {haveConverter && Object.keys(rates)
+            {haveConverter && Object.keys(currentRates)
                 .sort()
-                .map((symbPair) =>
-                <li key={`rate_${symbPair}_${config.conversionCurrency}`}><strong>{symbPair}: </strong>
-                    {getBalance(symbPair).toFixed(2)}</li>
-            )}
+                .map((symbPair: SymbolPair) =>
+                    <li key={`rate_${symbPair}_${config.conversionCurrency}`}><strong>{symbPair}: </strong>
+                        {getBalance(symbPair).toFixed(2)}</li>
+                )}
         </ul>
     </div>
 }

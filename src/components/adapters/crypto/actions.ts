@@ -1,12 +1,13 @@
-import {ConversionCurrency, TickerUpdateCallback, CoinSymbol, RateTickerMessage} from "./models";
+import {CoinSymbol, ConversionCurrency, RateTickerMessage, TickerUpdateCallback} from "./models";
 import {config} from "./config";
+import {coinConvertsionPair, conversionCurrencyPair} from "./utils";
 
 export function setupTickerStream(symbols: Array<CoinSymbol>, currency: ConversionCurrency, onUpdate: TickerUpdateCallback) {
     const url = 'wss://stream.binance.com:9443/ws/stream';
     const ws = new WebSocket(url);
 
-    const tickers = [`${config.baseConversionCoin}${currency}@ticker`];
-    symbols.forEach(symbol => tickers.push(`${symbol.toLowerCase()}${config.baseConversionCoin}@ticker`));
+    const tickers = [`${conversionCurrencyPair(config)}@ticker`];
+    symbols.forEach(symbol => tickers.push(`${coinConvertsionPair(symbol, config)}@ticker`));
 
     ws.onopen = function (event) {
         console.log("open: ", event);
