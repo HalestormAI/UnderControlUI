@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {ConversionCurrency, Rate, RateMap, SymbolPair} from "./models";
+import {ConversionCurrency, FixedLengthQueue, Rate, RateHistory, RateMap, SymbolPair} from "./models";
 import {setupTickerStream} from "./actions";
 import {balances, config} from "./config";
-import {conversionCurrencyPair, hasCurrencyComparator} from "./utils";
+import {coinConvertsionPair, conversionCurrencyPair, hasCurrencyComparator} from "./utils";
 
 export interface CryptoProps {
 }
@@ -10,7 +10,14 @@ export interface CryptoProps {
 const tickerBuffer: RateMap = {};
 
 export default function CryptoPage(props: CryptoProps) {
+    const allCoinNames = [...config.coins, config.baseConversionCoin];
     const [currentRates, setCurrentRates] = useState<RateMap>({});
+    const [rateHistory, setRateHistory] = useState<RateHistory>(allCoinNames.reduce((h, c) => {
+        return {
+            ...h,
+            [c]: new FixedLengthQueue<number>(config.historyLength)
+        }
+    }, {}));
 
     const onTickerUpdate = (rate: Rate) => {
         tickerBuffer[rate.symbol.toLowerCase()] = rate.price;
@@ -32,6 +39,15 @@ export default function CryptoPage(props: CryptoProps) {
         return balances[firstToken] * numCurrency;
     }
 
+    const updateHistory = (rates: RateMap) => {
+        allCoinNames.forEach(c => {
+            const symbolPair = c === config.baseConversionCoin ? conversionCurrencyPair(config) : coinConvertsionPair(c, config);
+            const rate = rates[symbolPair] || rateHistory[c].data[rateHistory[c].length - 1];
+            rateHistory[c].push(rate || 0);
+        });
+    }
+
+
     useEffect(() => {
         const ws = setupTickerStream(config.coins, config.conversionCurrency, onTickerUpdate);
 
@@ -41,6 +57,7 @@ export default function CryptoPage(props: CryptoProps) {
             }
             const rates = {...tickerBuffer};
             setCurrentRates(rates);
+            updateHistory(rates)
         }, config.updateFrequency);
         return () => {
             clearInterval(interval);
