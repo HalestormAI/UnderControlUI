@@ -4,13 +4,6 @@ import configData from '../../../config.json'
 type BalanceMap = {
     [key: string]: number;
 }
-export const balances: BalanceMap = {
-    "btc": 0.0020944,
-    "eth": 0.02374253,
-    "link": 1.33953798,
-    "ltc": 0.09401399,
-    "doge": 1736
-}
 
 type ConfigWithDefaults = {
     updateFrequency: number;
@@ -21,6 +14,8 @@ export type Config = ConfigWithDefaults & {
     conversionCurrency: ConversionCurrency;
     baseConversionCoin: CoinSymbol;
     coins: Array<CoinSymbol>;
+    balances: BalanceMap;
+    investment?: BalanceMap
 }
 
 const defaults: ConfigWithDefaults = {
